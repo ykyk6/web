@@ -1,32 +1,325 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+    <q-layout view="hhh lpr fFf" class="" >
+      <!-- 最上橫軸 -->
+    <q-header reveal class="bg-white" height-hint="98">
+      <!--  橫軸裡包的上面橫軸 -->
+      <!-- 橫軸裡包的下面橫軸 -->
+          <q-tabs align="center" class="w-100 text-dark" unelevated>
+          <q-route-tab v-if="$q.screen.gt.sm"  to="/" label="トップ"   class="text-light"/>
+        <q-route-tab  v-if="$q.screen.gt.sm" to="/onlineshop" label="オンラインショップ" />
+         <q-route-tab
+          v-if="$q.screen.gt.sm && user.id.length === 0"
+          to="/login"
+          label="ログイン"
+          />
+         <q-route-tab
+         v-if="$q.screen.gt.sm && user.id.length > 0"
+         to=""
+         @click="logout"
+         label="ログアウト" />
+         <q-route-tab v-if="$q.screen.gt.sm"  to="/thecart" label="カート" />
+         <q-route-tab  v-if="$q.screen.gt.sm" to="/Frontmember" label="マイページ" />
+          <q-route-tab  v-if="$q.screen.gt.sm" to="/Message" label="お問い合わせ" />
+        <!-- 右上麵包選單 -->
+        <q-btn dense flat round icon="menu" @click="right = !right" class="menuposition"/>
+      </q-tabs>
+    <!-- <q-drawer v-model="right" side="right"  bordered class="q-mini-drawer-hide"> -->
+      <!-- drawer content -->
+      <!-- 麵包選單展開欄 -->
+          <q-drawer
+        v-model="right"
+        side="right"
+        :breakpoint="500"
+        width="400"
+        overlay
+        content-class="bg-dark"
+      >
+        <q-scroll-area class="fit">
+          <q-list>
+            <template v-for="(menuItem, index) in menuList" class="bg-info">
+              <q-item :key="index" clickable :to="{name: menuItem.link}" :active="menuItem.label === ''" v-ripple class="text-area-ichi">
+                <q-item-section avatar class="text-ichi">
+                  <!-- <q-icon :name="menuItem.icon" /> -->
+                </q-item-section>
+                <q-item-section style="line-height:2rem; font-size:1.3rem;color:white;">
+                  {{ menuItem.label }}
+                </q-item-section>
+              </q-item>
+              <q-separator :key="'sep' + index" v-if="menuItem.separator" />
+            </template>
+          </q-list>
+        </q-scroll-area>
+      </q-drawer>
+          </q-header>
+          <div v-if="ismanager" class="bg-black mgnbtn"><q-btn unelevated class="mgnbtnbtn" color="black" size="22px" to="Backmember">後臺管理</q-btn></div>
+    <!-- </q-drawer> -->
+    <!-- 內容開始 -->
+    <q-page-container class=" w-100 h-100" >
+       <!-- <vuescroll :ops="ops"> -->
+        <router-view class=""/>
+       <!-- </vuescroll> -->
+    </q-page-container>
+  </q-layout>
+</div>
 </template>
 
+<script>
+import 'aos/dist/aos.css'
+const menuList = [
+  {
+    label: 'マイページ',
+    link: 'Frontmember',
+    separator: false
+  },
+  {
+    label: 'トップ',
+    link: 'Home',
+    separator: true
+  },
+  {
+    label: '紹介',
+    link: 'Onlineshop',
+    separator: false
+  },
+  {
+    label: 'class',
+    link: 'Class',
+    separator: false
+  },
+  {
+    label: 'オンラインショップ',
+    link: 'Onlineshop',
+    separator: true
+  },
+  {
+    label: 'お問い合わせ',
+    link: 'Message',
+    separator: false
+  },
+  {
+    label: '後臺管理',
+    link: 'Backmember',
+    separator: false
+  },
+  {
+    label: '購入者情報の入力',
+    link: 'orderinformation',
+    separator: false
+  }
+]
+export default {
+  // components: { vuescroll },
+  data () {
+    return {
+      right: false,
+      drawer: true,
+      menuList,
+      mgnappear: false
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.state.user
+    },
+    ismanager () {
+      return this.$store.state.user.manager
+    }
+  },
+  methods: {
+    logout () {
+      this.$swal({
+        icon: 'warning',
+        title: 'ログアウトしますか？',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#000',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'はい',
+        cancelButtonText: 'キャンセル'
+      }).then((value) => {
+        if (value.isConfirmed) {
+          this.axios.delete(process.env.VUE_APP_API + '/users/logout')
+            .then(res => {
+              if (res.data.success) {
+                this.$swal({
+                  icon: 'success',
+                  title: 'ログアウトしました',
+                  text: 'ご利用ありがとうございました。'
+                })
+                this.$store.commit('logout')
+              }
+            })
+        } else {
+          // this.$swal({
+          //   icon: 'success',
+          //   title: 'キャンセルします。'
+          // })
+        }
+      })
+    },
+    heartbeat () {
+      this.axios.get(process.env.VUE_APP_API + '/users/heartbeat')
+        .then(res => {
+          if (this.user.id.length > 0) {
+            // console.log(res)
+            if (!res.data) {
+              alert('登入時效已過')
+              this.$store.commit('logout')
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          alert('發生錯誤')
+          this.$store.commit('logout')
+        })
+    }
+  },
+  mounted () {
+    this.heartbeat()
+    setInterval(() => {
+      this.heartbeat()
+    }, 5000)
+    console.log(this.$store.state.user)
+  }
+}
+</script>
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+body{
+  width: 100vw;
+  height:100vh;
+  overflow-x: hidden;
+}
+.q-tab__label {
+    font-size: 14px;
+    line-height: 1.715em;
+    font-weight: 500;
+    font-family: "Noto Sans JP";
+}
+.q-tab__indicator {
+    opacity: 0;
+    height: 0px;
+    background: transparent;
+}
+.isFixed{
+    position:fixed;
+    background-color:#fff;
+    top:100px;
+    z-index:999;
+}
+.w-100{
+  width: 100vw;
+}
+.h-100{
+  height: 100vh;
+}
+.text-area-ichi{
+  /* background: chartreuse; */
+  margin-top: 10px;
+}
+.text-ichi{
+  line-height: 1rem;
+  /* background: aqua; */
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  width: 100vw;
+  height:100vh;
+  overflow-x: hidden;
 }
-
-#nav {
-  padding: 30px;
+.q-item__section--avatar{
+  min-width:0
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.bg-white{
+  background: white;
 }
-
+.text-dark {
+  color:black
+}
+#logo {
+position: absolute;
+width:17%;
+height: 260px;
+background: #6A7735;
+opacity: 0.8;
+z-index: 20;
+font-size: 3rem;
+color: beige;
+top: 0;
+left: 0;
+}
+#top1{
+  width:100%;
+  height:140px;
+  opacity: 0.7;
+  background: #d7d8d4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+}
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+.tpc{
+  font-size: 1.8rem;
+  color: #6A7735;
+  margin-right: 90px;
+}
+.menuposition{
+  /* position: fixed; */
+  top:0;
+  left: 3%;
+  border: 1px solid rgb(255, 255, 255) ;
+  border-radius: 50%;
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.3s;
+}
+.menuposition:hover{
+  transform: scale(1.5);
+}
+.mt-8 {
+  margin-top: 2%;
+}
+.q-tabs{
+  /* 71 */
+  height: 82px;
+}
+.q-drawer_content{
+  background: blue;
+}
+
+.q-drawer .q-item__section--main {
+    margin-top: 30px;
+    font-size: 1.5rem;
+}
+.q-drawer .q-item__section--avatar{
+  min-width:0;
+}
+.w-45{
+  width: 500px;
+}
+.mgnbtn{
+  width: 130px;
+  height: 60px;
+  position: fixed;
+  top: 100px;
+  right: 0;
+  z-index: 10;
+  border-radius: 3px;
+  border: 3px solid rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* .mgnbtnbtn{
+  width: 130px;
+  height: 90px;
+} */
 </style>
