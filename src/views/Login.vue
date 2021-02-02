@@ -41,6 +41,11 @@
       <q-btn outline style="color: blue;" label="新規会員登録" to="/reg"  class="regbtn"/>
     </div>
     </div>
+     <!--  -->
+      <q-inner-loading :showing="visible">
+        <q-spinner-gears size="60px" color="black" />
+      </q-inner-loading>
+     <!--  -->
     </q-form>
   </div>
 </template>
@@ -50,18 +55,19 @@ export default {
     return {
       account: '',
       password: '',
-      isPwd: 'true'
+      isPwd: 'true',
+      visible: false
     }
   },
   methods: {
     onSubmit () {
+      this.visible = true
       const object = { ...this.$data }
       delete object.isPwd
-      // console.log(object)
       this.axios.post(process.env.VUE_APP_API + '/users/login', object)
         .then(res => {
           if (res.data.success) {
-            console.log(res.data.result)
+            this.visible = false
             this.$store.commit('login', res.data.result)
             this.$swal({
               icon: 'success',
@@ -70,6 +76,10 @@ export default {
             })
               .then(() => {
                 this.$router.go(-1)
+              }).catch((error) => {
+                console.log(error)
+                this.visible = false
+                alert('エーラ')
               })
             // console.log(this.$store.user.id)
           } else {

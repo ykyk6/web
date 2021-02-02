@@ -135,8 +135,8 @@
   <q-card class="my-card q-mr-md row bgt" flat bordered>
     <div v-show="choice1" class="choice"><q-icon name="check_circle" size="60px" color="red"></q-icon></div>
     <div class="imgbox">
-      <q-img
-        src="http://localhost:3000/products/file/card.png" class="img"
+      <img
+        src="~@/assets/card.png" class="img"
       /></div>
       <div class="contenttext">
       <q-card-section>
@@ -221,7 +221,7 @@
       </tbody>
     </q-markup-table>
     <div class=" q-mt-md surebtn">
-     <q-btn color="black" label="確認" @click="btnok1('カード')"/></div>
+     <q-btn color="black" label="確認" @click="btnok1('クレジットカード')"/></div>
           </div>
           <!--  -->
           </q-card-section>
@@ -232,8 +232,8 @@
      <q-card class="my-card q-mr-md row bgt" flat bordered>
         <div v-show="choice2" class="choice"><q-icon name="check_circle" size="60px" color="red"></q-icon></div>
       <div class="imgbox">
-      <q-img
-        src="http://localhost:3000/products/file/logos.png" class="img"
+      <img
+        src="~@/assets/logos.png" class="img"
       /></div>
       <div class="contenttext">
       <q-card-section>
@@ -291,8 +291,8 @@
     <q-card class="my-card row bgt" flat bordered>
        <div v-show="choice3" class="choice"><q-icon name="check_circle" size="60px" color="red"></q-icon></div>
       <div class="imgbox">
-      <q-img
-        src="http://localhost:3000/products/file/bank.png" class="img"
+      <img
+        src="~@/assets/bank.png" class="img"
       /></div>
       <div class="contenttext">
       <q-card-section>
@@ -429,6 +429,10 @@
       </q-card>
     </q-dialog>
      <!--  -->
+      <q-inner-loading :showing="visible">
+        <q-spinner-gears size="60px" color="black" />
+      </q-inner-loading>
+     <!--  -->
      </q-form>
   </div>
   </div>
@@ -464,7 +468,8 @@ export default {
       pay: '',
       user: '',
       theshipping: '',
-      totalprice: ''
+      totalprice: '',
+      visible: false
     }
   },
   mounted () {
@@ -479,8 +484,6 @@ export default {
     this.theshipping = theshipping
     const totalprice = this.$store.getters.totalPrice2 + this.$store.getters.shipping
     this.totalprice = totalprice
-    console.log(totalprice)
-    // console.log(this.buyItem[0].title)
   },
   methods: {
     btnok1 (value) {
@@ -540,6 +543,7 @@ export default {
           cancelButtonText: 'キャンセル'
         }).then((value) => {
           if (value.isConfirmed) {
+            this.visible = true
             const obj = { ...this.$data }
             delete obj.expanded
             delete obj.expanded2
@@ -550,6 +554,7 @@ export default {
             this.axios.post(process.env.VUE_APP_API + '/order', obj)
               .then(res => {
                 if (res.data.success) {
+                  this.visible = false
                   this.$swal({
                     icon: 'success',
                     title: 'ご注文ありがとうございます。'
@@ -557,6 +562,10 @@ export default {
                 }
                 this.$store.commit('resetcartItem1')
                 this.$router.push('/onlineshop')
+              }).catch((error) => {
+                console.log(error)
+                this.visible = false
+                alert('エーラ')
               })
           } else {
             this.$swal({

@@ -68,6 +68,11 @@
       <q-btn outline style="color: goldenrod;" label="リセット" type="reset" @click="reset" class="resetbtn"/>
   </div>
   </div>
+   <!--  -->
+      <q-inner-loading :showing="visible">
+        <q-spinner-gears size="60px" color="black" />
+      </q-inner-loading>
+     <!--  -->
   </q-form>
   </div>
 </template>
@@ -80,7 +85,8 @@ export default {
       email: '',
       account: '',
       password: '',
-      isPwd: 'true'
+      isPwd: 'true',
+      visible: false
     }
   },
   computed: {
@@ -90,16 +96,23 @@ export default {
       this.$refs.input.resetValidation()
     },
     onSubmit () {
+      this.visible = true
       const obj = { ...this.$data }
       delete obj.isPwd
       this.axios.post(process.env.VUE_APP_API + '/users', this.$data)
         .then(res => {
           if (res.data.success) {
-            console.log('success')
+            this.visible = false
             this.$swal({
               icon: 'success',
               title: '登録完了',
               text: 'ご登録ありがとうございます。'
+            }).then(() => {
+              this.$router.push('/onlineshop')
+            }).catch((error) => {
+              console.log(error)
+              this.visible = false
+              alert('エーラ')
             })
           } else {
             console.log('false')
