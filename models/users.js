@@ -20,8 +20,7 @@ const userSchema = new Schema(
       type: String,
       minlength: [3, '帳號需3字以上'],
       maxlength: [10, '帳號需10字以下'],
-      required: [true, '缺少帳號'],
-      unique: '該帳號已被使用，請輸入新的'
+      required: [true, '缺少帳號']
     },
     password: {
       type: String,
