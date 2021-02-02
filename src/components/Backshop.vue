@@ -119,6 +119,11 @@
       <q-btn outline style="color: green;" label="清空" type="reset" class="clearbtn"/>
     </div>
      </div>
+      <!--  -->
+      <q-inner-loading :showing="visible">
+        <q-spinner-gears size="60px" color="black" />
+      </q-inner-loading>
+     <!--  -->
      </q-form>
     </div>
 </template>
@@ -136,18 +141,13 @@ export default {
       quantity: '',
       contentimage: null,
       description: '',
-      category: ''
+      category: '',
+      visible: false
     }
   },
   methods: {
     checkFileSize (files) {
       return files.filter(file => file.size < 1024 * 1024)
-    },
-    factoryFn (files) {
-      return {
-        url: 'http://localhost:3000/products',
-        method: 'POST'
-      }
     },
     onReset () {
       this.title = ''
@@ -160,7 +160,7 @@ export default {
       this.category = ''
     },
     onSubmit () {
-      console.log(this.image)
+      this.visible = true
       if (this.image.size > 1024 * 1024) {
         this.$swal({
           icon: 'error',
@@ -168,7 +168,6 @@ export default {
           text: '圖片太大'
         })
       } else {
-        console.log(this.image)
         const fd = new FormData()
         fd.append('title', this.title)
         fd.append('lorem', this.lorem)
@@ -182,22 +181,17 @@ export default {
         for (const image of this.image) {
           fd.append('image', image)
         }
-        this.axios.post(process.env.VUE_APP_API + '/products/', fd)
-        // console.log(this.axios)
-        // console.log(this.image)
-        // console.log(this.contentimage)
+        this.axios.post(process.env.VUE_APP_API + '/products', fd)
           .then(res => {
-            console.log(fd)
-            console.log(fd)
             if (res.data.success) {
-              console.log('success')
+              this.visible = false
               this.$swal({
                 icon: 'success',
                 title: '上傳成功',
                 text: ''
               })
             } else {
-              console.log('false')
+              this.visible = false
               this.$swal({
                 icon: 'error',
                 title: '上傳失敗',
@@ -206,6 +200,7 @@ export default {
             }
           })
           .catch(err => {
+            this.visible = false
             this.$swal({
               icon: 'error',
               title: '錯誤',
@@ -220,8 +215,6 @@ export default {
 <style scoped>
 .backshop{
   width: 60vw;
-  /* height: 100vh; */
-  /* background: chocolate; */
   margin-top: 5%;
   overflow-y: hidden;
   margin-left: 7%;
@@ -229,9 +222,7 @@ export default {
 .wh-100{
   overflow-y: hidden;
   width: 100vw;
-  /* height: 100vh; */
   display: flex;
-  /* justify-content: center; */
   margin-top: 25px;
 }
 .w-100{
@@ -240,7 +231,6 @@ export default {
 .inputbox{
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
 }
 .title{
@@ -249,10 +239,7 @@ export default {
 }
 .leftname{
   font-size: 18px;
-  /* background: chocolate; */
   line-height: 60px;
-  /* width: 60px; */
-  /* height: 60px; */
   margin-right: 23px;
 }
 .inputstyle{
@@ -264,7 +251,6 @@ export default {
   border-radius: 50%;
   margin-left: 25px;
   transition: ease-in 0.5s;
-  /* border: 2px solid red; */
 }
 .okbtn::after{
   content: "送出";
@@ -273,7 +259,6 @@ export default {
   background: transparent;
   width: 70px;
   height: 70px;
-  /* background: brown; */
   border-radius: 50%;
   position: absolute;
   top: 0;
@@ -285,7 +270,6 @@ export default {
   color: aliceblue;
   position: absolute;
   top: 0%;
-  /* translate: transition(100%,0); */
   border-radius: 50%;
   z-index: 20;
   transition: ease-in 0.5s;
@@ -296,7 +280,6 @@ export default {
   border-radius: 50%;
   margin-left: 20px;
   transition: ease-in 0.5s;
-  /* border: 2px solid red; */
 }
 .clearbtn::after{
   content: "送出";
