@@ -78,16 +78,6 @@ const menuList = [
     separator: true
   },
   {
-    label: '紹介',
-    link: 'Onlineshop',
-    separator: false
-  },
-  {
-    label: 'class',
-    link: 'Class',
-    separator: false
-  },
-  {
     label: 'オンラインショップ',
     link: 'Onlineshop',
     separator: true
@@ -96,17 +86,17 @@ const menuList = [
     label: 'お問い合わせ',
     link: 'Message',
     separator: false
-  },
-  {
-    label: '後臺管理',
-    link: 'Backmember',
-    separator: false
-  },
-  {
-    label: '購入者情報の入力',
-    link: 'orderinformation',
-    separator: false
   }
+  // {
+  //   label: '後臺管理',
+  //   link: 'Backmember',
+  //   separator: false
+  // },
+  // {
+  //   label: '購入者情報の入力',
+  //   link: 'orderinformation',
+  //   separator: false
+  // }
 ]
 export default {
   data () {
@@ -190,8 +180,8 @@ body{
   overflow-x: hidden;
 }
 .logoichi{
-  width: 18%;
-  height: 80px;
+  width: 17%;
+  height: 78px;
   background-image: url(~@/assets/macchamaccha4.png);
   background-size: contain;
   background-repeat: no-repeat;
