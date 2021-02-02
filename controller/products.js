@@ -216,8 +216,8 @@ export const file = async (req, res) => {
       method: 'Get',
       url: 'http://' + process.env.FTP_HOST + '/' + process.env.FTP_USER + '/' + req.params.file,
       responseType: 'stream'
-    }).then(res => {
-      res.data.pipe(res)
+    }).then(ress => {
+      ress.data.pipe(res)
     }).catch(error => {
       res.status(error.response.status).send({ success: false, message: '取得圖片失敗' })
     })
