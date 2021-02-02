@@ -115,7 +115,7 @@ export default {
               alert('エーラ')
             })
           } else {
-            console.log('false')
+            this.visible = false
             this.$swal({
               icon: 'error',
               title: 'エーラ',
@@ -124,6 +124,7 @@ export default {
           }
         })
         .catch(() => {
+          this.visible = false
           this.$swal({
             icon: 'error',
             title: '發生錯誤',

@@ -568,6 +568,7 @@ export default {
                 alert('エーラ')
               })
           } else {
+            this.visible = false
             this.$swal({
               icon: 'success',
               title: 'キャンセルします。'

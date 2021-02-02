@@ -83,6 +83,7 @@ export default {
               })
             // console.log(this.$store.user.id)
           } else {
+            this.visible = false
             this.$swal({
               icon: 'error',
               title: 'アカウントが見つかりません',
@@ -91,6 +92,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.visible = false
           this.$swal({
             icon: 'error',
             title: 'エラー！',
