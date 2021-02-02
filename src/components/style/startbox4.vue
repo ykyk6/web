@@ -1,7 +1,5 @@
 <template>
  <div class="startbox4">
-        <!-- <img src="@/assets/spacewhite1.png" style="width:160%"> -->
-         <!-- <div class="intro-prev-space2"></div> -->
        <div class="bg3">
        <!-- title -->
        <div class="introducebox">
@@ -176,6 +174,7 @@ export default {
         font-size: 30px;
         font-weight: 500;
         color: black;
+        margin-bottom: 20px;
         /* background: coral; */
       }
       .sen{
@@ -353,12 +352,10 @@ export default {
       }
       .yajirushitxt{
         width: 90px;
-        /* height: 10px; */
         font-size: 10px;
         position: absolute;
-        left: 93%;
+        left: 95%;
         top: 44%;
-        /* background: violet; */
         z-index: 20;
       }
       .yajirushitxt2{
@@ -391,6 +388,10 @@ export default {
       .shopcontent::before{
         left: 0;
         top: 5.5%;
+      }
+      .yajirushitxt{
+        left: 93%;
+        top: 44%;
       }
       }
 </style>

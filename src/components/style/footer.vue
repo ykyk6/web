@@ -28,8 +28,8 @@
         </div>
         <div class="other">
              <div class="otherleft">
-                 <div class="link" @click="topbtn">LINK</div>
-                 <div class="top q-mt-md">Top</div>
+                 <div class="link">LINK</div>
+                 <div class="top1 q-mt-md" @click="topbtn">Top</div>
                  <div class="onlineshop q-mt-sm" @click="shopbtn">Onlineshop</div>
                  <div class="ask q-mt-sm" @click="askbtn">Ask</div>
                  <div class=""></div>
@@ -42,13 +42,24 @@
 </template>
 <script>
 export default {
+  name: 'ScrollTop',
   data () {
     return {
+      // 定义滚动条默认位置
+      scrollTop: null,
+      // 定义按钮默认状态
+      isScrollTop: false
     }
+  },
+  mounted () {
   },
   methods: {
     topbtn () {
-      this.$router.push('/')
+      document.getElementById('app').scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
     },
     shopbtn () {
       this.$router.push('/onlineshop')
@@ -229,7 +240,7 @@ export default {
         justify-content: center;
         /* border: 1px solid rosybrown; */
     }
-    .top,.onlineshop,.ask{
+    .top1,.onlineshop,.ask{
         width: 70%;
         border: 1px solid white;
         color: white;
@@ -237,7 +248,7 @@ export default {
         position: relative;
         transition: all 0.5s;
     }
-     .top::after{
+     .top1::after{
       content: "";
       position: absolute;
       left: 0;
@@ -250,7 +261,7 @@ export default {
       opacity: 0;
       transition: all 0.6s;
   }
-    .top:hover::after{
+    .top1:hover::after{
       opacity: 1;
       width: 100%;
       cursor: pointer;

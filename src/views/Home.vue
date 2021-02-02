@@ -1,6 +1,6 @@
 <template>
   <div class="home w-100" id="top">
-    <div class="macchabox"><img src="@/assets/macchamaccha.png" class="pich100"></div>
+    <!-- <div class="macchabox"><img src="@/assets/macchamaccha.png" class="pich100"></div> -->
     <!-- 頁首輪播圖 -->
     <q-carousel
       animated
@@ -17,6 +17,7 @@
       content-class="abc"
       class=""
       style="z-index:-10 carouselstyle;"
+      data-aos="fade-up" data-aos-duration="2000"
     >
       <q-carousel-slide :name="1" img-src="https://haa.athuman.com/media/japanese/wp-content/uploads/sites/4/2020/07/mains-1.jpg" />
       <q-carousel-slide :name="2" img-src="https://haa.athuman.com/media/japanese/wp-content/uploads/sites/4/2020/07/sub_3-5.jpeg" />
@@ -27,7 +28,7 @@
     <div class="startbox q-mr-xs q-pb-xl">
     <div class="blackbox"></div>
       <div class="bigbg2"><img src="~@/assets/bg-grey.png" class="bg-grey "></div>
-       <div class="mactchatext"><div class="mactchatext2" data-aos="fade-up" data-aos-duration="1000">Maccha</div></div>
+       <div class="mactchatext"><div class="mactchatext2">Maccha</div></div>
        <!--  -->
       <div class="say q-ml-xs row items-center justify-center"><div class="q-mt-sm say1text">茶道とは、一言で言ってしまうと、</div></div>
       <div class="box1"><div class="box1-1"></div></div>
@@ -224,6 +225,7 @@ export default {
         margin-top: 80px;
         position: relative;
         z-index: -2;
+        padding-bottom: 100px;
       }
       .box1{
         width: 52%;
@@ -625,7 +627,32 @@ export default {
     @media screen and (min-width: 1300px) and (max-width: 1500px){
         .shopimg{
         width: 80%;
-        /* height: 100%; */
       }
+      .say{
+        margin-top: 220px;}
+.box1right{
+         margin-top: 80px;
+}
+.box1{
+    margin-top: 130px;
+}
+ .startbox{
+        margin-top: 70px;
+       padding-bottom: 120px;
       }
+      .mactchatext{
+        width: 50%;
+        height: 160px;
+        position: absolute;
+        top: -6%;
+        right: 0;
+        transform:rotate(-8deg);
+        z-index: 22;
+        }
+        .mactchatext2{
+          font-size: 150px;
+          font-family: 'Caveat', cursive;
+          color: rgba(228, 173, 21, 0.8);
+        }
+    }
  </style>
