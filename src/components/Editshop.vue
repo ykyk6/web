@@ -5,7 +5,7 @@
         <q-tabs
           v-model="tab"
           dense
-          class="text-grey"
+          class="text-grey bgw"
           active-color="primary"
           indicator-color="primary"
           align="justify"
@@ -22,27 +22,22 @@
 
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="matchabowl">
-            <!-- <div class="text-h6">茶碗</div> -->
             <div class="row"><matchabowlcardedit></matchabowlcardedit></div>
           </q-tab-panel>
 
           <q-tab-panel name="matcha">
-            <!-- <div class="text-h6">抹茶</div> -->
             <div class="row"><matchacardedit></matchacardedit></div>
           </q-tab-panel>
 
           <q-tab-panel name="dessert">
-            <!-- <div class="text-h6">スイーツ</div> -->
            <div class="row"><Dessertcardedit></Dessertcardedit></div>
           </q-tab-panel>
 
            <q-tab-panel name="chagu">
-            <!-- <div class="text-h6">茶具</div> -->
            <div class="row"><chagucardedit></chagucardedit></div>
           </q-tab-panel>
 
            <q-tab-panel name="others">
-            <!-- <div class="text-h6">Others</div> -->
             <div class="row"><otherscardedit></otherscardedit></div>
             </q-tab-panel>
         </q-tab-panels>
@@ -71,7 +66,10 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+.bgw{
+  background: white;
+}
 .mt30{
   margin-top: 30px;
 }
@@ -83,7 +81,7 @@ export default {
   height: 64px;
 }
 .q-card{
-  background: chocolate;
+  /* background: chocolate; */
   box-shadow: 0 0 0 0;
   /* border: 1px solid rgb(230, 230, 230); */
 }
