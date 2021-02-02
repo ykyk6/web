@@ -64,6 +64,7 @@ export default {
       this.visible = true
       const object = { ...this.$data }
       delete object.isPwd
+      delete object.visible
       this.axios.post(process.env.VUE_APP_API + '/users/login', object)
         .then(res => {
           if (res.data.success) {

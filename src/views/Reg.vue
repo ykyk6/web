@@ -109,10 +109,6 @@ export default {
               text: 'ご登録ありがとうございます。'
             }).then(() => {
               this.$router.push('/onlineshop')
-            }).catch((error) => {
-              console.log(error)
-              this.visible = false
-              alert('エーラ')
             })
           } else {
             this.visible = false
@@ -123,13 +119,14 @@ export default {
             })
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.visible = false
           this.$swal({
             icon: 'error',
-            title: '發生錯誤',
-            text: ''
+            title: 'エーラ',
+            text: error.response.data.message
           })
+          console.log(error)
         })
     },
     onReset () {
