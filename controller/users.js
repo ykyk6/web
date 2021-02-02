@@ -12,16 +12,16 @@ export const createUser = async (req, res) => {
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
     if (error.name === 'ValidationError') {
-      // Object.keys :返回陣列
-      // error 裡的 errors 項裡第一個訊息
       const key = Object.keys(error.errors)[0]
-      // errors 項裡 message 欄位顯示的訊息
       const message = error.errors[key].message
+      console.log(message)
       res.status(400).send({ success: false, message })
+    } else if (error.name === 'MongoError' && error.code === 11000) {
+      res.status(400).send({ success: false, message: 'このユーザー名は既に存在しています。' })
     } else {
-      res.status(500).send({ success: false, message: '伺服器錯誤' })
+      console.log(error.message)
+      res.status(500).send({ success: false, message: 'Internal Server Error' })
     }
-    console.log(error)
   }
 }
 // 登入帳號
@@ -31,12 +31,8 @@ export const loginUser = async (req, res) => {
     return
   }
   try {
-    // 去查詢有沒有這個帳號
     const result = await users.findOne(req.body)
     if (result !== null) {
-      // 把傳進來的資料記錄起來，給他一組序號的感覺
-      // 把使用者資料紀錄到 session
-      // session給的序號裡最後面多了帳號資料，如果沒有登入就沒有
       req.session.user = result
       res.status(200).send({ success: true, message: '', result })
     } else {
