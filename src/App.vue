@@ -6,26 +6,27 @@
       <!--  橫軸裡包的上面橫軸 -->
       <!-- 橫軸裡包的下面橫軸 -->
           <q-tabs align="center" class="w-100 text-dark" unelevated>
-          <q-route-tab v-if="$q.screen.gt.sm"  to="/" label="トップ"   class="text-light"/>
-        <q-route-tab  v-if="$q.screen.gt.sm" to="/onlineshop" label="オンラインショップ" />
+            <div class="logoichi"></div>
+          <q-route-tab v-if="$q.screen.gt.sm"  to="/" label="トップ"   class="text-light top"/>
+        <q-route-tab  v-if="$q.screen.gt.sm" to="/onlineshop" label="オンラインショップ" class="shop"/>
          <q-route-tab
           v-if="$q.screen.gt.sm && user.id.length === 0"
           to="/login"
           label="ログイン"
+          class="login"
           />
          <q-route-tab
          v-if="$q.screen.gt.sm && user.id.length > 0"
          to=""
          @click="logout"
-         label="ログアウト" />
-         <q-route-tab v-if="$q.screen.gt.sm"  to="/thecart" label="カート" />
-         <q-route-tab  v-if="$q.screen.gt.sm" to="/Frontmember" label="マイページ" />
-          <q-route-tab  v-if="$q.screen.gt.sm" to="/Message" label="お問い合わせ" />
+         label="ログアウト"
+         class="logout"/>
+         <q-route-tab v-if="$q.screen.gt.sm"  to="/thecart" label="カート" class="cart"/>
+         <q-route-tab  v-if="$q.screen.gt.sm" to="/Frontmember" label="マイページ" class="mypage"/>
+          <q-route-tab  v-if="$q.screen.gt.sm" to="/Message" label="お問い合わせ" class="contactus"/>
         <!-- 右上麵包選單 -->
         <q-btn dense flat round icon="menu" @click="right = !right" class="menuposition"/>
       </q-tabs>
-    <!-- <q-drawer v-model="right" side="right"  bordered class="q-mini-drawer-hide"> -->
-      <!-- drawer content -->
       <!-- 麵包選單展開欄 -->
           <q-drawer
         v-model="right"
@@ -40,7 +41,6 @@
             <template v-for="(menuItem, index) in menuList" class="bg-info">
               <q-item :key="index" clickable :to="{name: menuItem.link}" :active="menuItem.label === ''" v-ripple class="text-area-ichi">
                 <q-item-section avatar class="text-ichi">
-                  <!-- <q-icon :name="menuItem.icon" /> -->
                 </q-item-section>
                 <q-item-section style="line-height:2rem; font-size:1.3rem;color:white;">
                   {{ menuItem.label }}
@@ -109,7 +109,6 @@ const menuList = [
   }
 ]
 export default {
-  // components: { vuescroll },
   data () {
     return {
       right: false,
@@ -151,10 +150,6 @@ export default {
               }
             })
         } else {
-          // this.$swal({
-          //   icon: 'success',
-          //   title: 'キャンセルします。'
-          // })
         }
       })
     },
@@ -162,7 +157,6 @@ export default {
       this.axios.get(process.env.VUE_APP_API + '/users/heartbeat')
         .then(res => {
           if (this.user.id.length > 0) {
-            // console.log(res)
             if (!res.data) {
               alert('登入時效已過')
               this.$store.commit('logout')
@@ -188,10 +182,134 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;0,800;1,500;1,600;1,700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap');
 body{
   width: 100vw;
   height:100vh;
   overflow-x: hidden;
+}
+.logoichi{
+  width: 18%;
+  height: 80px;
+  background-image: url(~@/assets/macchamaccha4.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  left: 25px;
+  top: 0;
+}
+.top,.shop,.login,.logout,.cart,.mypage,.contactus{
+  margin-top: -10px;
+}
+.top::after{
+  content:"Top";
+  /* font-family: 'Bodoni Moda', serif; */
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color:#a09b9b;
+  font-size: 10px;
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%,0);
+  /* background: rgba(168, 167, 170, 0.8); */
+  line-height: 1;
+}
+.shop::after{
+  content:"Onlineshop";
+  /* font-family: 'Bodoni Moda', serif; */
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #a09b9b;
+  font-size: 10px;
+  position: absolute;
+  left: 46%;
+  top: 70%;
+  transform: translate(-50%,0);
+  /* background: rgba(168, 167, 170, 0.8); */
+  line-height: 1;
+}
+.login::after{
+  content:"Login";
+  /* font-family: 'Bodoni Moda', serif; */
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #a09b9b;
+  font-size: 10px;
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%,0);
+   /* background: rgba(168, 167, 170, 0.8); */
+  line-height: 1;
+}
+.logout::after{
+  content:"Logout";
+  /* font-family: 'Bodoni Moda', serif; */
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color:#a09b9b;
+  font-size: 10px;
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%,0);
+  /* background: rgba(168, 167, 170, 0.8); */
+  line-height: 1;
+}
+.cart::after{
+  content:"Cart";
+  /* font-family: 'Bodoni Moda', serif; */
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color:#a09b9b;
+  font-size: 10px;
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%,0);
+  /* background: rgba(168, 167, 170, 0.8); */
+  line-height: 1;
+}
+.mypage::after{
+  content:"MyPage";
+  /* font-family: 'Bodoni Moda', serif; */
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color:#a09b9b;
+  font-size: 10px;
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%,0);
+  /* background: rgba(168, 167, 170, 0.8); */
+  line-height: 1;
+}
+.contactus::after{
+  content:"ContactUs";
+  /* font-family: 'Bodoni Moda', serif; */
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color:#a09b9b;
+  font-size: 10px;
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%,0);
+  /* background: rgba(168, 167, 170, 0.8); */
+  line-height: 1;
+}
+.q-card {
+    background: #ffffff;
 }
 .q-tab__label {
     font-size: 14px;
@@ -217,12 +335,10 @@ body{
   height: 100vh;
 }
 .text-area-ichi{
-  /* background: chartreuse; */
   margin-top: 10px;
 }
 .text-ichi{
   line-height: 1rem;
-  /* background: aqua; */
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -274,7 +390,6 @@ left: 0;
   margin-right: 90px;
 }
 .menuposition{
-  /* position: fixed; */
   top:0;
   left: 3%;
   border: 1px solid rgb(255, 255, 255) ;
@@ -288,13 +403,8 @@ left: 0;
   margin-top: 2%;
 }
 .q-tabs{
-  /* 71 */
-  height: 82px;
+  height: 80px;
 }
-.q-drawer_content{
-  background: blue;
-}
-
 .q-drawer .q-item__section--main {
     margin-top: 30px;
     font-size: 1.5rem;
@@ -310,7 +420,7 @@ left: 0;
   height: 60px;
   position: fixed;
   top: 100px;
-  right: 0;
+  right: 1%;
   z-index: 10;
   border-radius: 3px;
   border: 3px solid rgb(0, 0, 0);
@@ -318,8 +428,4 @@ left: 0;
   align-items: center;
   justify-content: center;
 }
-/* .mgnbtnbtn{
-  width: 130px;
-  height: 90px;
-} */
 </style>
