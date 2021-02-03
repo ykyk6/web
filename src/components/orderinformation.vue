@@ -409,29 +409,12 @@
       </div>
 <div class="">
 </div>
-<!-- <div class=" text-left q-ml-md text-h6">注文日：{{date}}</div> -->
 <div class="row w-8 q-mt-xl justify-center">
   <div class="col-6 howpay row items-center"><div class="col-4 bgg h-10">決済方式</div><div class="col-8 h-10 bg">{{ pay }}</div></div>
     <div class="col-5 submitok"><q-btn outline style="color: black;" label="注文する" type="submit" class="submitok2"/></div>
 </div>
 </div>
      <!--  -->
-      <q-dialog v-model="fixed" persistent>
-      <q-card style="width: 350px; max-width: 80vw;" class="q-pa-md">
-        <q-card-section class="column items-center">
-          <q-avatar icon="priority_high" color="red" text-color="white" size="90px" />
-          <div class="q-ml-sm text-h4 q-mt-xl">確定送出嗎?</div>
-        </q-card-section>
-        <q-card-actions align="center">
-          <q-btn outline label="確定" color="black" v-close-popup @click="sure(perask)"/>
-          <q-btn outline label="取消" color="black" v-close-popup @click="cancel()"/>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-     <!--  -->
-      <q-inner-loading :showing="visible">
-        <q-spinner-gears size="60px" color="black" />
-      </q-inner-loading>
      <!--  -->
      </q-form>
   </div>
@@ -469,7 +452,11 @@ export default {
       user: '',
       theshipping: '',
       totalprice: '',
-      visible: false
+      visible: false,
+      delieverydate: '',
+      delieverynumber: '',
+      info: '',
+      ordernow: ''
     }
   },
   mounted () {
@@ -528,10 +515,11 @@ export default {
       if (this.pay.length === 0) {
         this.$swal({
           icon: 'error',
-          title: 'エーラ',
+          title: 'エラー',
           text: '決済方法を選択して下さい。'
         })
       } else {
+        this.fixed = true
         this.$swal({
           icon: 'warning',
           title: '注文内容を確定する',
@@ -557,7 +545,8 @@ export default {
                   this.visible = false
                   this.$swal({
                     icon: 'success',
-                    title: 'ご注文ありがとうございます。'
+                    title: 'ご注文ありがとうございました。',
+                    text: 'ご注文番号は:' + res.data.result._id
                   })
                 }
                 this.$store.commit('resetcartItem1')
