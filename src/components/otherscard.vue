@@ -7,7 +7,7 @@
   <div class="q-pa-md row items-start q-gutter-md box">
     <!-- 商品 -->
      <template v-for="(cardItem, index) in cardItem">
-    <q-card class="my-card" flat bordered :key="index">
+    <q-card class="my-card bgw" flat bordered :key="index">
       <!-- 圖 -->
       <q-img
         :src= 'img[index]' class="card-img"
@@ -32,7 +32,6 @@
         class="buyqstyle"></div>
         <!-- footer -->
       <q-card-actions class="q-card-actions">
-        <!-- <q-btn flat color="dark" label="詳しいを見る" to="/" class="btnk"/> -->
         <q-btn flat color="primary" label='カートに入れる' icon="shopping_cart" class="btnc" @click="addCart(cardItem)"/>
          </q-card-actions> <q-space />
     </q-card>
@@ -52,16 +51,6 @@
    </div>
 </template>
 <script>
-// import Top from '../components/Top.vue'
-// const cardItem = [
-//   {
-//     img: 'https://shop.r10s.jp/auc-houkouen-tea/cabinet/kagobag/01-set-03-001.jpg',
-//     title: '茶道具 6点セット ',
-//     lorem: 'かごバッグ、抹茶碗、茶筌、茶杓、小棗、抹茶がセットになったお得な6点セットです。！',
-//     price: '6520',
-//     label: 'カートに入れる'
-//   }
-// ]
 export default {
   data () {
     return {
@@ -78,13 +67,20 @@ export default {
       if (cardItem.buyquantity.length === 0) {
         return false
       } else {
+        this.$q.notify({
+          icon: 'shopping_cart',
+          message: 'カートに入れました。',
+          color: 'grey-7',
+          position: 'top-right',
+          badgeColor: 'white',
+          timeout: 800
+        })
         const orderproducts = {}
         orderproducts.img = process.env.VUE_APP_API + '/products/file/' + cardItem.image
         orderproducts._id = cardItem._id
         orderproducts.title = cardItem.title
         orderproducts.price = cardItem.price
         orderproducts.quantity = parseInt(cardItem.buyquantity)
-        console.log(orderproducts.buyquantity)
         this.$store.commit('addCart', orderproducts)
       }
     }
@@ -101,13 +97,9 @@ export default {
           const img = cardItem.map(function (item, index, array) {
             return item.image
           })
-          console.log(img)
           for (let i = 0; i < this.cardItem.length; i++) {
-            console.log(img[i])
             this.img.push(process.env.VUE_APP_API + '/products/file/' + img[i])
-            console.log(this.img)
           }
-          console.log(this.img)
         } else {
           this.$swal({
             icon: 'error',
@@ -128,6 +120,9 @@ export default {
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap');
+.bgw{
+  background: white;
+}
 .outside{
   width: 80vw;
   height: 100vh;
@@ -145,43 +140,29 @@ export default {
   width: 100%;
   max-width: 16.4%;
   height: 32%;
-  /* height: 300px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-bottom: 5px;
-  /* background: chartreuse; */
 }
 .card-title{
   margin-top: 5px;
 }
 .card-lorem{
   display: block;
-flex-grow: 0.1;
-/* height: 30px; */
-/* background: darkblue; */
-margin-top: 3%;
+  flex-grow: 0.1;
+  margin-top: 3%;
 }
 .text-size{
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 16px;
 }
-/* .btnk{
-  background: chartreuse;
- position: absolute;
- top: 0;
- left: 0;
-} */
 .btnc{
   width: 95%;
   border: 1px solid rgba(206, 205, 205,0.8);
   margin-top: -4%;
-  /* flex-grow: 1; */
 }
 .card-price{
- /* background: darkmagenta; */
- /* display: block; */
- /* height: 20px; */
  font-size: 19px;
  margin-top: 4%;
  color: darkslategray;
@@ -194,24 +175,20 @@ margin-top: 3%;
   margin-left:  4px ;
 }
 .q-card-actions{
-  /* background: chartreuse; */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .home:hover{
   color: rgb(81, 142, 145);
-  /* text-decoration: underline;*/
 }
 .q-tab-sel:hover{
-  /* background: darkcyan; */
   border: 1px solid #6A7735;
 }
 .q-tab-sel:active{
   border: 1px solid #6A7735;
 }
 .buyqstyle{
-  /* background: #6A7735; */
   border: 1px solid rgb(214, 214, 214);
   width: 45px;
   height: 30px;
@@ -219,8 +196,6 @@ margin-top: 3%;
   margin-bottom: 5px;
 }
 .buyqtext{
-  /* background: blue; */
-  /* line-height: 20px; */
   margin-top: -8px;
   margin-right: 5px;
   font-size: 10px;
@@ -235,14 +210,11 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 95%;
-  /* height: 290px; */
   max-width: 100%;
   height: 20%;
-  /* height: 300px; */
   display: flex;
   justify-content: center;
   padding-bottom: 5px;
-  /* background: chartreuse; */
 }
 }
 @media screen and (min-width: 600px) and (max-width: 899px) {
@@ -254,7 +226,6 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
-  /* height: 290px; */
   max-width: 40%;
   height: 20%;
   display: flex;
@@ -271,7 +242,6 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
-  /* height: 290px; */
   max-width: 30%;
   height: 25%;
   display: flex;
@@ -289,7 +259,6 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
-  /* height: 290px; */
   max-width: 23%;
   height: 30%;
   display: flex;
