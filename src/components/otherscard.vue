@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     addCart (cardItem) {
-      if (cardItem.buyquantity.length === 0) {
+      if (cardItem.buyquantity === undefined) {
         this.$q.notify({
           icon: 'shopping_cart',
           message: '数量を入力して下さい。',
