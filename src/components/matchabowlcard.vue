@@ -7,7 +7,7 @@
       <div class='q-pa-md row items-start q-gutter-md content-box' v-if="img.length">
         <!-- 商品 -->
         <template v-for='(cardItem, index) in cardItem'>
-          <q-card class='my-card' flat bordered :key='index'>
+          <q-card class='my-card bgw' flat bordered :key='index'>
             <!-- 圖 -->
             <q-img :src='img[index]' class='card-img' />
             <!-- 標題 -->
@@ -45,7 +45,6 @@
                 class='btnc'
               />
               <!--  -->
-              <!--  -->
             </q-card-actions>
             <q-space />
           </q-card>
@@ -73,6 +72,7 @@ export default {
       lorem: '',
       price: '',
       cardItem: [],
+      buyquantity: '',
       current: 1
     }
   },
@@ -93,7 +93,7 @@ export default {
           message: 'カートに入れました。',
           color: 'grey-7',
           position: 'top-right',
-          badgeColor: 'white',
+          badgeColor: 'red',
           timeout: 800
         })
         const orderproducts = {}
@@ -115,15 +115,11 @@ export default {
             return item.category === 'matchabowl'
           })
           this.cardItem = cardItem
-          // this.title = this.cardItem[0]
           const img = cardItem.map(function (item, index, array) {
             return item.image
           })
-          // this.img = img
           for (let i = 0; i < this.cardItem.length; i++) {
-            console.log(img[i])
             this.img.push(process.env.VUE_APP_API + '/products/file/' + img[i])
-            console.log(this.img)
           }
         } else {
           this.$swal({
@@ -145,6 +141,9 @@ export default {
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap');
+.bgw{
+  background: white;
+}
 .outside{
   width: 80vw;
   height: 100vh;
@@ -171,9 +170,9 @@ export default {
   margin-top: 5px;
 }
 .card-lorem{
- display: block;
- flex-grow: 0.1;
- margin-top: 3%;
+  display: block;
+flex-grow: 0.1;
+margin-top: 3%;
 }
 .text-size{
   font-family: 'Noto Sans JP', sans-serif;
@@ -185,9 +184,9 @@ export default {
   margin-top: -4%;
 }
 .card-price{
-  font-size: 19px;
-  margin-top: 4%;
-  color: darkslategray;
+ font-size: 19px;
+ margin-top: 4%;
+ color: darkslategray;
 }
 .card-price2{
   display: block;
@@ -197,7 +196,6 @@ export default {
   margin-left:  4px ;
 }
 .q-card-actions{
-  /* background: chartreuse; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -289,9 +287,4 @@ export default {
   padding-bottom: 5px;
 }
 }
-/* @media screen and (min-width: 1301px) and (max-width: 1500px) {
-  .my-card {
-  height: 400px
-}
-} */
 </style>
