@@ -79,8 +79,14 @@ export default {
   },
   methods: {
     addCart (cardItem) {
-      if (cardItem.buyquantity.length === 0) {
-        return false
+      if (cardItem.buyquantity === undefined) {
+        this.$q.notify({
+          icon: 'shopping_cart',
+          message: '数量を入力して下さい。',
+          color: 'red',
+          position: 'bottom',
+          timeout: 800
+        })
       } else {
         this.$q.notify({
           icon: 'shopping_cart',
@@ -119,7 +125,7 @@ export default {
         } else {
           this.$swal({
             icon: 'error',
-            title: '錯誤',
+            title: 'エラー',
             text: res.data.message
           })
         }
@@ -127,7 +133,7 @@ export default {
       .catch((err) => {
         this.$swal({
           icon: 'error',
-          title: '錯誤',
+          title: 'エラー',
           text: err.response.data.message
         })
       })
