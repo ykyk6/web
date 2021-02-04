@@ -87,6 +87,7 @@ export default {
           position: 'bottom',
           timeout: 800
         })
+        return 0
       } else {
         this.$q.notify({
           icon: 'shopping_cart',
