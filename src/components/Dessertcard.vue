@@ -32,7 +32,6 @@
         class="buyqstyle"></div>
         <!-- footer -->
       <q-card-actions class="q-card-actions">
-        <!-- <q-btn flat color="dark" label="詳しいを見る" to="/" class="btnk"/> -->
         <q-btn flat color="primary" label='カートに入れる' icon="shopping_cart" class="btnc" @click="addCart(cardItem)"/>
          </q-card-actions> <q-space />
     </q-card>
@@ -52,88 +51,13 @@
    </div>
 </template>
 <script>
-// import Top from '../components/Top.vue'
-// const cardItem = [
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/hansoku/ss/090279-s-03-pl.jpg',
-//     title: 'パフェバー',
-//     lorem: '大人気発売中！',
-//     price: '915',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/kago/matchachoco08.jpg',
-//     title: '抹茶チョコ',
-//     lorem: '大人気発売中！',
-//     price: '1300',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/06910995/imgrc0073040465.jpg',
-//     title: 'バターサンド',
-//     lorem: '20%OFF！！',
-//     price: '1080',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/new-kago/10002244.jpg',
-//     title: '抹茶プリン',
-//     lorem: '在庫わずか！！',
-//     price: '1818',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/new-kago/583841-1.jpg',
-//     title: 'ロールケーキ',
-//     lorem: '10%OFF！！',
-//     price: '1673',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/vd2020/vd2020-kago/cc9-01.jpg',
-//     title: '抹茶チョコ',
-//     lorem: 'ラスト一個です！',
-//     price: '1296',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/kago/kago2/yumemi-kago1.jpg',
-//     title: 'チーズケーキ',
-//     lorem: '大人気発売中！',
-//     price: '3076',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/photo02/imgrc0066245612.jpg',
-//     title: '抹茶だいふく',
-//     lorem: '在庫わずか！！',
-//     price: '5940',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/photo02/matchadaifuku02.jpg',
-//     title: '抹茶だいふく',
-//     lorem: '在庫わずか！！',
-//     price: '1389',
-//     label: 'カートに入れる'
-//   },
-//   {
-//     img: 'https://shop.r10s.jp/itohkyuemon/cabinet/hansoku/ss/800x800.jpg',
-//     title: 'ティラミス',
-//     lorem: '大人気発売中！',
-//     price: '2052',
-//     label: 'カートに入れる'
-//   }
-// ]
 export default {
-  // components: { Top }
   data () {
     return {
       img: [],
       title: '',
       lorem: '',
       price: '',
-      // buyquantity: '',
       cardItem: [],
       current: 1
     }
@@ -143,6 +67,14 @@ export default {
       if (cardItem.buyquantity.length === 0) {
         return false
       } else {
+        this.$q.notify({
+          icon: 'shopping_cart',
+          message: 'カートに入れました。',
+          color: 'grey-7',
+          position: 'top-right',
+          badgeColor: 'white',
+          timeout: 800
+        })
         const orderproducts = {}
         orderproducts.img = process.env.VUE_APP_API + '/products/file/' + cardItem.image
         orderproducts._id = cardItem._id
@@ -159,23 +91,16 @@ export default {
       .get(process.env.VUE_APP_API + '/products/')
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data.result)
           const cardItem = res.data.result.filter(function (item, index, array) {
             return item.category === 'dessert'
           })
           this.cardItem = cardItem
-          console.log(cardItem)
-          console.log(this.cardItem)
           const img = cardItem.map(function (item, index, array) {
             return item.image
           })
-          console.log(img)
           for (let i = 0; i < this.cardItem.length; i++) {
-            console.log(img[i])
             this.img.push(process.env.VUE_APP_API + '/products/file/' + img[i])
-            console.log(this.img)
           }
-          console.log(this.img)
         } else {
           this.$swal({
             icon: 'error',
@@ -199,7 +124,6 @@ export default {
 .outside{
   width: 80vw;
   height: 100vh;
-  /* background: aqua; */
 }
 .box{
   display: flex;
@@ -214,43 +138,29 @@ export default {
   width: 100%;
   max-width: 16.4%;
   height: 32%;
-  /* height: 300px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-bottom: 5px;
-  /* background: chartreuse; */
 }
 .card-title{
   margin-top: 5px;
 }
 .card-lorem{
   display: block;
-flex-grow: 0.1;
-/* height: 30px; */
-/* background: darkblue; */
-margin-top: 3%;
+  flex-grow: 0.1;
+  margin-top: 3%;
 }
 .text-size{
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 16px;
 }
-/* .btnk{
-  background: chartreuse;
- position: absolute;
- top: 0;
- left: 0;
-} */
 .btnc{
   width: 95%;
   border: 1px solid rgba(206, 205, 205,0.8);
   margin-top: -4%;
-  /* flex-grow: 1; */
 }
 .card-price{
- /* background: darkmagenta; */
- /* display: block; */
- /* height: 20px; */
  font-size: 19px;
  margin-top: 4%;
  color: darkslategray;
@@ -263,24 +173,20 @@ margin-top: 3%;
   margin-left:  4px ;
 }
 .q-card-actions{
-  /* background: chartreuse; */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .home:hover{
   color: rgb(81, 142, 145);
-  /* text-decoration: underline;*/
 }
 .q-tab-sel:hover{
-  /* background: darkcyan; */
   border: 1px solid #6A7735;
 }
 .q-tab-sel:active{
   border: 1px solid #6A7735;
 }
 .buyqstyle{
-  /* background: #6A7735; */
   border: 1px solid rgb(214, 214, 214);
   width: 45px;
   height: 30px;
@@ -288,8 +194,6 @@ margin-top: 3%;
   margin-bottom: 5px;
 }
 .buyqtext{
-  /* background: blue; */
-  /* line-height: 20px; */
   margin-top: -8px;
   margin-right: 5px;
   font-size: 10px;
@@ -304,14 +208,11 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 95%;
-  /* height: 290px; */
   max-width: 100%;
   height: 20%;
-  /* height: 300px; */
   display: flex;
   justify-content: center;
   padding-bottom: 5px;
-  /* background: chartreuse; */
 }
 }
 @media screen and (min-width: 600px) and (max-width: 899px) {
@@ -323,7 +224,6 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
-  /* height: 290px; */
   max-width: 40%;
   height: 20%;
   display: flex;
@@ -340,7 +240,6 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
-  /* height: 290px; */
   max-width: 30%;
   height: 25%;
   display: flex;
@@ -358,7 +257,6 @@ margin-top: 3%;
   .my-card {
   font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
-  /* height: 290px; */
   max-width: 23%;
   height: 30%;
   display: flex;
