@@ -2,14 +2,46 @@
   <div class="q-pa-md row justify-start">
 <!--  -->
 <div class="ordersure q-mt-md">
+  <div class="row q-mx-md" style="border:1px solid black">
+    <div class=" col-2 bg-grey-4"><q-btn flat @click="lasttime" class="full-width senafter"> 從新到舊</q-btn></div>
+    <div class=" col-2 bg-grey-4"><q-btn flat @click="allonly" class="full-width senafter"> 顯示全部</q-btn></div>
+    <div class=" col-2 bg-grey-4"><q-btn flat @click="guestonly" class="full-width senafter"> 只顯示訪客</q-btn></div>
+    <div class=" col-2 bg-grey-4"><q-btn flat @click="memberonly" class="full-width senafter"> 只顯示會員</q-btn></div>
+    <div class=" col-2 bg-grey-4"><q-btn flat @click="replyok" class="full-width senafter"> 顯示已回覆</q-btn></div>
+    <div class=" col-2 bg-grey-4"><q-btn flat @click="replynotok" class="full-width senafter"> 顯示未回覆</q-btn></div>
+  </div>
+   <!--  -->
+  <div class="row q-mx-md q-mt-sm" style="border:1px solid black">
+    <div class=" col-6 ">
+      <div class="row">
+      <div class="col-4 bg-grey-4 row items-center justify-center">
+        <div class="">以諮詢編號搜尋</div>
+        </div>
+     <div class=" col-6"><q-input v-model="asknumber" type="text" dense borderless></q-input></div>
+     <div class="col-2 bg-dark text-white row items-center justify-center"><q-btn flat @click="asknumbersearch(asknumber)" class="full-width">搜尋</q-btn></div>
+     </div>
+      </div>
+      <!--  -->
+    <div class=" col-6 ">
+      <div class="row">
+      <div class="col-4 bg-grey-4 row items-center justify-center">
+        <div class="">以會員ID搜尋</div>
+        </div>
+     <div class=" col-6"><q-input v-model="memberid" type="text" dense borderless standout></q-input></div>
+     <div class="col-2 bg-dark text-white row items-center justify-center"><q-btn flat @click="memberidsearch(memberid)" class="full-width">搜尋</q-btn></div>
+     </div>
+      </div>
+    </div>
   <div class="q-pa-md">
+    <div class=" text-h7" v-if="noasks">目前沒有資料</div>
+    <div class="" v-else>
     <q-markup-table style="border:1px solid black;padding:2px">
       <thead>
         <tr>
-          <th class="text-center t2 bg-grey-4">諮詢日期</th>
+          <th class="text-center t3 bg-grey-4">諮詢日期</th>
           <th class="text-center t2 bg-grey-4">諮詢編號</th>
           <th class="text-center t3 bg-grey-4">諮詢人身分</th>
-          <th class="text-center t3 bg-grey-4">會員ID</th>
+          <th class="text-center t2 bg-grey-4">會員ID</th>
           <th class="text-center t3 bg-grey-4">諮詢內容</th>
           <th class="text-center t3 bg-grey-4">是否已回覆</th>
           <th class="text-center t3 bg-grey-4">刪除</th>
@@ -30,12 +62,13 @@
       </template>
       </tbody>
     </q-markup-table>
+    </div>
     <!-- q-dialog1 -->
       <q-dialog
       v-model="fixed"
       no-focus
     >
-      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section>
       <div class="box2">
       </div>
@@ -112,7 +145,7 @@
     </q-dialog>
     <!-- 2 -->
       <q-dialog v-model="fixed2" persistent>
-      <q-card style="width: 350px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 350px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section class="column items-center">
           <q-avatar icon="priority_high" color="red" text-color="white" size="90px" />
           <div class="q-ml-sm text-h4 q-mt-xl">缺少回覆</div>
@@ -125,7 +158,7 @@
     <!--  -->
       <!-- 3  -->
       <q-dialog v-model="fixed3" persistent>
-      <q-card style="width: 350px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 350px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section class="column items-center">
           <q-avatar icon="priority_high" color="red" text-color="white" size="90px" />
           <div class="q-ml-sm text-h4 q-mt-xl">確定送出嗎?</div>
@@ -139,7 +172,7 @@
     <!--  -->
      <!-- 4  -->
       <q-dialog v-model="fixed4" persistent>
-      <q-card style="width: 350px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 350px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section class="column items-center">
           <q-avatar icon="done" color="black" text-color="white" size="90px" />
           <div class="q-ml-sm text-h4 q-mt-xl">已送出</div>
@@ -162,14 +195,14 @@ export default {
       fixed4: false,
       label2: false,
       asks: [],
+      ask: '',
       index: '',
       perask: '',
       reply: '',
-      // replyplaceappear: false,
-      replybtnappear: true
+      replybtnappear: true,
+      memberid: '',
+      asknumber: ''
     }
-  },
-  computed: {
   },
   mounted () {
     this.axios
@@ -195,16 +228,190 @@ export default {
       })
   },
   methods: {
+    asknumbersearch (asknumber) {
+      this.axios
+        .get(process.env.VUE_APP_API + '/ask')
+        .then((res) => {
+          if (res.data.success) {
+            const asks = res.data.result.filter(function (item) {
+              return item._id === asknumber
+            })
+            this.asks = asks
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    memberidsearch (memberid) {
+      this.axios
+        .get(process.env.VUE_APP_API + '/ask')
+        .then((res) => {
+          if (res.data.success) {
+            const asks = res.data.result.filter(function (item) {
+              return item.userid === memberid
+            })
+            this.asks = asks
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    lasttime () {
+      return this.asks.reverse()
+    },
+    guestonly () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/ask')
+        .then((res) => {
+          if (res.data.success) {
+            const asks = res.data.result.filter(function (item) {
+              return item.user === 'ゲスト'
+            })
+            this.asks = asks
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    memberonly () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/ask')
+        .then((res) => {
+          if (res.data.success) {
+            const asks = res.data.result.filter(function (item) {
+              return item.user === '会員'
+            })
+            this.asks = asks
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    allonly () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/ask')
+        .then((res) => {
+          if (res.data.success) {
+            const asks = res.data.result
+            this.asks = asks
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    replyok () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/ask')
+        .then((res) => {
+          if (res.data.success) {
+            const asks = res.data.result.filter(function (item) {
+              return item.isReply === true
+            })
+            this.asks = asks
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    replynotok () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/ask')
+        .then((res) => {
+          if (res.data.success) {
+            const asks = res.data.result.filter(function (item) {
+              return item.isReply === undefined
+            })
+            this.asks = asks
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
     opencontent (ask) {
       this.fixed = true
       const index = this.asks.indexOf(ask)
       const perask = this.asks[index]
       this.index = index
       this.perask = perask
-      console.log(perask.reply)
     },
     submit (perask) {
-      console.log(this.perask.reply)
       if (this.perask.length === 0) {
         this.fixed2 = true
       } else {
@@ -232,7 +439,6 @@ export default {
         confirmButtonText: '是的',
         cancelButtonText: '取消'
       }).then((value) => {
-        console.log(value)
         if (value.isConfirmed) {
           this.axios.delete(process.env.VUE_APP_API + '/ask/' + ask._id)
             .then((res) => {
@@ -249,14 +455,23 @@ export default {
         }
       })
     }
+  },
+  computed: {
+    noasks () {
+      if (this.asks.length === 0) {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap');
-/* .q-panel .scroll{
-  overflow: hidden;
-} */
+.bgw{
+  background: white;
+}
 .q-menu {
     position: fixed !important;
     display: inline-block;
@@ -286,9 +501,6 @@ export default {
 }
 .outside{
   overflow: hidden;
-  /* width: 100%; */
-  /* height: 90vh; */
-  /* background: blue; */
   display: flex;
   justify-content: center;
   font-family: 'Noto Sans JP', sans-serif;
@@ -300,6 +512,15 @@ export default {
 .noorder{
   font-size: 20px;
   color: grey;
+}
+.senafter::after{
+  content: "";
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: rgb(0, 0, 0);
 }
 .img{
   width: 50%;
