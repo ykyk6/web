@@ -82,7 +82,8 @@ export default {
       question: '',
       date: '',
       isShowGuest: false,
-      isShowMember: false
+      isShowMember: false,
+      userid: ''
     }
   },
   methods: {
@@ -115,10 +116,14 @@ export default {
                     icon: 'success',
                     title: 'お問い合わせ受付完了。',
                     text: 'ありがとうございました。'
+                  }).then(() => {
+                    if (this.$store.state.user.id === '') {
+                      this.$router.push('/')
+                    } else {
+                      this.$router.push('Frontmember')
+                    }
                   })
                 }
-              }).then(() => {
-                this.$router.push('Frontmember')
               })
           } else {
           }
@@ -134,9 +139,12 @@ export default {
     if (this.$store.state.user.id === '') {
       this.isShowGuest = true
       this.user = 'ゲスト'
+      this.userid = 'guest'
     } else {
       this.isShowMember = true
       this.user = '会員'
+      this.userid = this.$store.state.user.id
+      console.log(this.userid)
     }
   }
 }
@@ -161,7 +169,6 @@ export default {
 .mtablestyle{
   width: 150px;
   height: 120px;
-  /* background: turquoise; */
   position: absolute;
   right: 36px;
   top: -120px;
