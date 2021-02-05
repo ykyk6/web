@@ -8,10 +8,8 @@ export const Askcreate = async (req, res) => {
   }
   try {
     console.log(req.body)
-    // let askItem = []
-    // askItem = req.body.askItem
     const result = await ask.create({
-      userid: req.session.user._id,
+      userid: req.body.userid,
       date: req.body.date,
       user: req.body.user,
       name: req.body.name,
@@ -23,8 +21,6 @@ export const Askcreate = async (req, res) => {
       isReply: req.body.isReply
     })
     res.status(200).send({ success: true, message: '', result })
-    console.log(result)
-    //   console.log(req.body)
   } catch (error) {
     if (error.name === 'ValidationError') {
       const key = Object.keys(error.errors)[0]
@@ -33,7 +29,6 @@ export const Askcreate = async (req, res) => {
       res.status(400).send({ success: false, message })
       console.log(message)
     } else {
-      // console.log(error)
       res.status(500).send({ success: false, message: '伺服器錯誤' })
     }
   }
@@ -94,7 +89,6 @@ export const editAsk = async (req, res) => {
       console.log(req.body)
     } else {
       res.status(500).send({ success: false, message: '伺服器錯誤' })
-      // console.log(result.user)
     }
   }
 }
