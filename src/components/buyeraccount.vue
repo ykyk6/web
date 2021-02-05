@@ -2,7 +2,23 @@
   <div class="q-pa-md row justify-start">
     <!-- 訂購確認 -->
 <div class="ordersure q-mt-md">
+  <!--  -->
+  <div class="row q-mx-md q-mt-sm" style="border:1px solid black">
+    <div class=" col-12 ">
+      <div class="row">
+      <div class="col-3 bg-grey-4 row items-center justify-center">
+        <div class="">以會員ID搜尋</div>
+        </div>
+     <div class=" col-6"><q-input v-model="membernumber" type="text" dense borderless standout square></q-input></div>
+     <div class="col-1 bg-dark text-white row items-center justify-center"><q-btn flat square @click="membernumbersearch(membernumber)" class="full-width">搜尋</q-btn></div>
+      <div class="col-2 bg-grey-8 text-white row items-center justify-center"><q-btn flat @click="allmembernumbersearch" class="full-width">顯示全部</q-btn></div>
+     </div>
+      </div>
+    </div>
+  <!--  -->
   <div class="q-pa-md">
+    <div class=" text-h7" v-if="nousers">目前沒有資料</div>
+    <div class="" v-else>
     <q-markup-table style="border:1px solid black;padding:2px">
       <thead>
         <tr>
@@ -28,11 +44,12 @@
       </template>
       </tbody>
     </q-markup-table>
+    </div>
     <!-- q-dialog1 -->
       <q-dialog
       v-model="fixed"
     >
-      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section>
       <div class="box2">
       </div>
@@ -78,7 +95,7 @@
       <q-dialog
       v-model="fixed2"
     >
-      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section>
       <div class="box2">
       </div>
@@ -125,7 +142,7 @@
       <q-dialog
       v-model="fixed3"
     >
-      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section>
       <div class="box2">
       </div>
@@ -218,7 +235,7 @@
       <q-dialog
       v-model="fixed4"
     >
-      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section>
       <div class="box2">
       </div>
@@ -229,19 +246,26 @@
       <tbody :key='index'>
         <tr>
           <td class="text-left t1 bg-grey-4">訂單狀態</td>
-          <td class="text-left">{{ perordernow }}</td>
+          <td v-if="noordersituation">尚沒有更新</td>
+          <td v-else class="text-left">{{ perordernow }}</td>
         </tr>
         <tr>
              <td class="text-left t2 bg-grey-4">出貨日期</td>
-             <td class="text-left">{{ perorderdelieverydate }}</td>
+             <td class="text-left">
+               <div v-if="noordersituation" class="">尚沒有更新</div>
+               <div v-else class="">{{ perorderdelieverydate }}</div></td>
         </tr>
          <tr>
           <td class="text-left t3 bg-grey-4">物流方式/追蹤編號</td>
-          <td class="text-left">{{ perorderdelieverynumber }}</td>
+          <td class="text-left">
+            <div v-if="noordersituation" class="">尚沒有更新</div>
+            <div v-else class="">{{ perorderdelieverynumber }}</div></td>
          </tr>
          <tr>
           <td class="text-left t4 bg-grey-4">備註</td>
-           <td class="text-left">{{ perorderinfo }}</td>
+           <td class="text-left">
+              <div v-if="noordersituation" class="">尚沒有更新</div>
+             <div v-else class="">{{ perorderinfo }}</div></td>
          </tr>
         </tbody>
         </q-markup-table>
@@ -265,7 +289,6 @@
 export default {
   data () {
     return {
-      // buyItem: [],
       fixed: false,
       fixed2: false,
       fixed3: false,
@@ -281,21 +304,26 @@ export default {
       perordernow: '',
       perorderdelieverydate: '',
       perorderdelieverynumber: '',
-      perorderinfo: ''
+      perorderinfo: '',
+      noordersituation: false
     }
   },
   computed: {
+    nousers () {
+      if (this.useraccounts.length === 0) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   mounted () {
     this.axios
       .get(process.env.VUE_APP_API + '/users/')
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data)
-          console.log(res.data.result)
           const useraccounts = res.data.result
           this.useraccounts = useraccounts
-          console.log(useraccounts)
         } else {
           this.$swal({
             icon: 'error',
@@ -313,6 +341,54 @@ export default {
       })
   },
   methods: {
+    allmembernumbersearch () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/users/')
+        .then((res) => {
+          if (res.data.success) {
+            const useraccounts = res.data.result
+            this.useraccounts = useraccounts
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    membernumbersearch (membernumber) {
+      this.axios
+        .get(process.env.VUE_APP_API + '/users/')
+        .then((res) => {
+          if (res.data.success) {
+            const useraccounts = res.data.result.filter(function (item) {
+              return item._id === membernumber
+            })
+            this.useraccounts = useraccounts
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
     openinfo (useraccount) {
       this.fixed = true
       const index = this.useraccounts.indexOf(useraccount)
@@ -351,12 +427,9 @@ export default {
     },
     perinfo (perorder) {
       this.fixed3 = true
-      // console.log(perorder)
       const buyItems = perorder.buyItem
       this.buyItems = buyItems
-      // console.log(this.userperaccount)
       const index = this.perorder.indexOf(perorder)
-      // console.log(index)
       const perordershipping = this.perorder[index].theshipping
       this.perordershipping = perordershipping
       const perordertotalprice = this.perorder[index].totalprice
@@ -365,9 +438,7 @@ export default {
       this.perorderinfo = perorderinfo
     },
     managebtn (useraccount) {
-      // console.log(this.useraccounts)
       const index = this.useraccounts.indexOf(useraccount)
-      console.log(index)
       if (this.useraccounts[index].manager !== true) {
         this.axios.patch(process.env.VUE_APP_API + '/users/' + this.useraccounts[index]._id, { manager: true })
           .then(res => {
@@ -379,10 +450,9 @@ export default {
               this.managebtnstyle = !this.managebtnstyle
               this.useraccounts[index].manager = !this.useraccounts[index].manager
             } else {
-              console.log(res.data)
               this.$swal({
                 icon: 'error',
-                title: 'エラー',
+                title: '錯誤',
                 text: res.data.message
               })
             }
@@ -403,10 +473,7 @@ export default {
     },
     opensituation (perorder) {
       this.fixed4 = true
-      console.log(this.perorder)
-      console.log(perorder)
       const index = this.perorder.indexOf(perorder)
-      console.log(index)
       const perordernow = this.perorder[index].ordernow
       this.perordernow = perordernow
       const perorderdelieverydate = this.perorder[index].delieverydate
@@ -415,6 +482,11 @@ export default {
       this.perorderdelieverynumber = perorderdelieverynumber
       const perorderinfo = this.perorder[index].info
       this.perorderinfo = perorderinfo
+      console.log(this.perorderinfo)
+      console.log(this.perorder[index].ordernow)
+      if (this.perorderinfo === 'undefined') {
+        this.noordersituation = true
+      }
     },
     noorder (perorder) {
       if (perorder.length === 0) {
@@ -435,9 +507,9 @@ export default {
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap');
-/* .q-panel .scroll{
-  overflow: hidden;
-} */
+.bgw{
+  background: white;
+}
 .q-menu {
     position: fixed !important;
     display: inline-block;
@@ -467,9 +539,6 @@ export default {
 }
 .outside{
   overflow: hidden;
-  /* width: 100%; */
-  /* height: 90vh; */
-  /* background: blue; */
   display: flex;
   justify-content: center;
   font-family: 'Noto Sans JP', sans-serif;
