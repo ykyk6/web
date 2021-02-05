@@ -2,14 +2,46 @@
   <div class="q-pa-md row justify-start ">
     <!-- 訂購確認 -->
 <div class="ordersure q-mt-md">
+  <!--  -->
+   <div class="row q-mx-md" style="border:1px solid black">
+    <div class=" col-3 bg-grey-4"><q-btn flat @click="lasttime" class="full-width senafter"> 從新到舊</q-btn></div>
+    <div class=" col-3 bg-grey-4"><q-btn flat @click="allonly" class="full-width senafter"> 顯示全部</q-btn></div>
+    <div class=" col-3 bg-grey-4"><q-btn flat @click="delieveryok" class="full-width senafter"> 顯示已出貨</q-btn></div>
+    <div class=" col-3 bg-grey-4"><q-btn flat @click="delieverynotok" class="full-width senafter"> 顯示未出貨</q-btn></div>
+  </div>
+   <!--  -->
+  <div class="row q-mx-md q-mt-sm" style="border:1px solid black">
+    <div class=" col-6 ">
+      <div class="row">
+      <div class="col-4 bg-grey-4 row items-center justify-center">
+        <div class="">以訂單編號搜尋</div>
+        </div>
+     <div class=" col-6"><q-input v-model="ordernumber" type="text" dense borderless></q-input></div>
+     <div class="col-2 bg-dark text-white row items-center justify-center"><q-btn flat @click="ordernumbersearch(ordernumber)" class="full-width">搜尋</q-btn></div>
+     </div>
+      </div>
+      <!--  -->
+    <div class=" col-6 ">
+      <div class="row">
+      <div class="col-4 bg-grey-4 row items-center justify-center">
+        <div class="">以會員ID搜尋</div>
+        </div>
+     <div class=" col-6"><q-input v-model="membernumber" type="text" dense borderless standout></q-input></div>
+     <div class="col-2 bg-dark text-white row items-center justify-center"><q-btn flat @click="membernumbersearch(membernumber)" class="full-width">搜尋</q-btn></div>
+     </div>
+      </div>
+    </div>
+  <!--  -->
   <div class="q-pa-md">
+    <div class=" text-h7" v-if="noorders">目前沒有資料</div>
+    <div class="" v-else>
     <q-markup-table class="" style="border:1px solid black;padding:2px">
       <thead>
         <tr>
-          <th class="text-center t2 bg-grey-4">訂購日期</th>
+          <th class="text-center t3 bg-grey-4">訂購日期</th>
           <th class="text-center t2 bg-grey-4">訂單編號</th>
+          <th class="text-center t3 bg-grey-4">訂購人</th>
           <th class="text-center t2 bg-grey-4">顧客ID</th>
-          <!-- <th class="text-center t3 bg-grey-4">運費</th> -->
           <th class="text-center t3 bg-grey-4">總金額</th>
           <th class="text-center t3 bg-grey-4">付款方式</th>
           <th class="text-center t3 bg-grey-4">訂購明細</th>
@@ -22,8 +54,8 @@
         <tr :key='index'>
           <td class="text-center">{{ orderTotalItems.date }}</td>
           <td class="text-center">{{ orderTotalItems._id }}</td>
+          <td class="text-center">{{ orderTotalItems.name }}</td>
           <td class="text-center">{{ orderTotalItems.user }}</td>
-          <!-- <td class="text-center">￥{{ orderTotalItems.theshipping }}</td> -->
           <td class="text-center">￥{{ orderTotalItems.totalprice }}</td>
           <td class="text-center">{{ orderTotalItems.pay }}</td>
           <td class="text-center"> <q-btn round borderless unelevated icon="description" size="10px"  style="background:transparent;color:grey" @click="openorder(orderTotalItems)" /></td>
@@ -35,12 +67,13 @@
     </q-markup-table>
   </div>
       </div>
+      </div>
       <!--  -->
       <div class="">
       <q-dialog
       v-model="fixed"
     >
-      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section>
       <div class="box2">
       </div>
@@ -154,7 +187,7 @@
       <q-dialog
       v-model="fixed2"
     >
-      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md">
+      <q-card style="width: 950px; max-width: 80vw;" class="q-pa-md bgw">
         <q-card-section>
       <div class="box2">
       </div>
@@ -230,7 +263,6 @@
 export default {
   data () {
     return {
-      // buyItem: [],
       model: null,
       options: [
         '注文受', '商品準備中', '出荷準備中', '出荷完了', '全キャンセル', '一部返品', '全返品'
@@ -249,7 +281,22 @@ export default {
       info: '',
       orderdelievery: '',
       totaldelieverydate: '',
-      totaldelieverydate3: ''
+      totaldelieverydate3: '',
+      loading: true,
+      ordernumber: '',
+      membernumber: ''
+    }
+  },
+  computed: {
+    // buyItems () {
+    //   return this.orderTotalItems[this.index].buyItem
+    // }
+    noorders () {
+      if (this.orderTotalItems.length === 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   mounted () {
@@ -257,18 +304,15 @@ export default {
       .get(process.env.VUE_APP_API + '/order')
       .then((res) => {
         if (res.data.success) {
-          // console.log(res.data.result)
-          // console.log(res.data)
           const orderTotalItems = res.data.result
           this.orderTotalItems = orderTotalItems
           const buyItem = res.data.result.buyItem
           this.buyItem = buyItem
-          // console.log(buyItem)
           const totaldelieverydate = orderTotalItems.map(function (item, index, array) {
             return item.delieverydate
           })
           this.totaldelieverydate = totaldelieverydate
-          console.log(totaldelieverydate)
+          this.loading = false
         } else {
           this.$swal({
             icon: 'error',
@@ -285,12 +329,133 @@ export default {
         })
       })
   },
-  computed: {
-    buyItems () {
-      return this.orderTotalItems[this.index].buyItem
-    }
-  },
   methods: {
+    ordernumbersearch (ordernumber) {
+      this.axios
+        .get(process.env.VUE_APP_API + '/order')
+        .then((res) => {
+          if (res.data.success) {
+            const orderTotalItems = res.data.result.filter(function (item) {
+              return item._id === ordernumber
+            })
+            this.orderTotalItems = orderTotalItems
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    membernumbersearch (membernumber) {
+      this.axios
+        .get(process.env.VUE_APP_API + '/order')
+        .then((res) => {
+          if (res.data.success) {
+            const orderTotalItems = res.data.result.filter(function (item) {
+              return item.user === membernumber
+            })
+            this.orderTotalItems = orderTotalItems
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    lasttime () {
+      return this.orderTotalItems.reverse()
+    },
+    allonly () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/order')
+        .then((res) => {
+          if (res.data.success) {
+            const orderTotalItems = res.data.result
+            this.orderTotalItems = orderTotalItems
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    delieveryok () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/order')
+        .then((res) => {
+          if (res.data.success) {
+            const orderTotalItems = res.data.result.filter(function (item) {
+              return item.delieverynumber !== '' && item.delieverynumber !== undefined
+            })
+            this.orderTotalItems = orderTotalItems
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
+    delieverynotok () {
+      this.axios
+        .get(process.env.VUE_APP_API + '/order')
+        .then((res) => {
+          if (res.data.success) {
+            const orderTotalItems = res.data.result.filter(function (item) {
+              return item.delieverynumber === '' || item.delieverynumber === undefined
+            })
+            this.orderTotalItems = orderTotalItems
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: '錯誤',
+              text: res.data.message
+            })
+          }
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: 'error',
+            title: '錯誤',
+            text: err.response.data.message
+          })
+        })
+    },
     deletee (orderTotalItems, idx) {
       this.$swal({
         icon: 'warning',
@@ -303,7 +468,6 @@ export default {
         confirmButtonText: '不用懷疑',
         cancelButtonText: '再考慮一下..'
       }).then((value) => {
-        console.log(value)
         if (value.isConfirmed) {
           this.axios.delete(process.env.VUE_APP_API + '/order/' + orderTotalItems._id)
             .then((res) => {
@@ -317,29 +481,21 @@ export default {
               })
             })
         } else {
-          // this.$swal({
-          //   icon: 'success',
-          //   title: '取消刪除'
-          // })
         }
       })
     },
     openorder (orderTotalItems) {
       this.fixed = true
-      // this.index0 = orderTotalItems
-      // console.log(this.index0)
       const index = this.orderTotalItems.indexOf(orderTotalItems)
-      console.log(index)
-      const orderTotalItemsIndex = this.orderTotalItems[index].buyItem
-      console.log(orderTotalItemsIndex)
       const ordertotalshippingIndex = this.orderTotalItems[index].theshipping
-      console.log(ordertotalshippingIndex)
       const ordertotalpriceIndex = this.orderTotalItems[index].totalprice
       this.index = index
       this.ordertotalshippingIndex = ordertotalshippingIndex
       this.ordertotalpriceIndex = ordertotalpriceIndex
       const orderTotalItemsinfo = this.orderTotalItems[index]
       this.orderTotalItemsinfo = orderTotalItemsinfo
+      const buyItems = this.orderTotalItems[this.index].buyItem
+      this.buyItems = buyItems
     },
     delivery (orderTotalItems) {
       this.fixed2 = true
@@ -355,17 +511,16 @@ export default {
           if (res.data.success) {
             this.$swal({
               icon: 'success',
-              title: '登録しました'
+              title: '已儲存'
             })
             this.orderTotalItems[this.index].ordernow = this.ordernow
             this.orderTotalItems[this.index].delieverydate = this.totaldelieverydate3
             this.orderTotalItems[this.index].delieverynumber = this.delieverynumber
             this.orderTotalItems[this.index].info = this.info
           } else {
-            console.log(res.data)
             this.$swal({
               icon: 'error',
-              title: 'エラー',
+              title: '錯誤',
               text: res.data.message
             })
           }
@@ -384,14 +539,11 @@ export default {
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap');
-/* .q-panel .scroll{
-  overflow: hidden;
-} */
+.bgw{
+  background: white;
+}
 .outside{
   overflow: hidden;
-  /* width: 100%; */
-  /* height: 90vh; */
-  /* background: blue; */
   display: flex;
   justify-content: center;
   font-family: 'Noto Sans JP', sans-serif;
@@ -399,6 +551,15 @@ export default {
 .ordersure{
     width: 90%;
     margin-left: 5%;
+}
+.senafter::after{
+  content: "";
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: rgb(0, 0, 0);
 }
 .img{
   width: 50%;
