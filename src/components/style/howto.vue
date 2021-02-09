@@ -412,7 +412,7 @@
       }
       @media screen and (min-width:1200px) and (max-width: 1500px){
        .startbox3{
-         padding-top: 100px;
+         padding-top: 120px;
         }
         .lefttxt{
           font-size: 16px;
