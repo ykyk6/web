@@ -1,7 +1,5 @@
 <template>
   <div class="home w-100" id="top">
-    <!-- <div class="macchabox"><img src="@/assets/macchamaccha.png" class="pich100"></div> -->
-    <!-- 頁首輪播圖 -->
     <q-carousel
       animated
       v-model="slide"
@@ -14,7 +12,6 @@
       @mouseenter="autoplay = false"
       @mouseleave="autoplay = true"
       height="680px"
-      content-class="abc"
       class=""
       style="z-index:-10 carouselstyle;"
       data-aos="fade-up" data-aos-duration="2000"
@@ -625,34 +622,34 @@ export default {
       }
 }
     @media screen and (min-width: 1300px) and (max-width: 1500px){
-        .shopimg{
+      .shopimg{
         width: 80%;
       }
       .say{
-        margin-top: 220px;}
-.box1right{
-         margin-top: 80px;
-}
-.box1{
-    margin-top: 130px;
-}
- .startbox{
+        margin-top: 250px;
+      }
+      .box1right{
+        margin-top: 110px;
+      }
+      .box1{
+        margin-top: 140px;
+      }
+     .startbox{
         margin-top: 70px;
-       padding-bottom: 120px;
+        padding-bottom: 120px;
       }
       .mactchatext{
-        width: 50%;
-        height: 160px;
+        width: 45%;
         position: absolute;
-        top: -6%;
+        top: -10%;
         right: 0;
-        transform:rotate(-8deg);
+        transform:rotate(-10deg);
         z-index: 22;
-        }
-        .mactchatext2{
-          font-size: 150px;
-          font-family: 'Caveat', cursive;
-          color: rgba(228, 173, 21, 0.8);
-        }
-    }
+       }
+       .mactchatext2{
+         font-size: 150px;
+         font-family: 'Caveat', cursive;
+         color: rgba(228, 173, 21, 0.8);
+       }
+ }
  </style>
