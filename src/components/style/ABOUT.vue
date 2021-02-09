@@ -35,11 +35,6 @@
 <script>
 export default {
   data () {
-    return {
-      ops: {
-        vuescroll: {}
-      }
-    }
   }
 }
 </script>
@@ -55,15 +50,13 @@ export default {
         justify-content: center;
         align-items: center;
         width: 100%;
-        /* background: lightslategrey; */
-        margin-top: 8%;
+        /* margin-top: 8%; */
         position: relative;
         padding-top: 230px;
       }
         .uepic{
         width: 200px;
         height: 280px;
-        /* background: blue; */
         position: absolute;
         right: 0;
         top: 86%;
@@ -80,8 +73,6 @@ export default {
         position: absolute;
         left: -5%;
         top: 3%;
-        /* background: rgb(238, 206, 164); */
-        /* transform: rotate(-3deg); */
         z-index: -1;
         background-image: url(~@/assets/bg-white.png);
         background-attachment: fixed;
@@ -98,7 +89,6 @@ export default {
     .aboutframe{
       width: 370px;
       height: 470px;
-      /* background: brown; */
       position: absolute;
       left: -36%;
       top: -10%;
@@ -125,8 +115,6 @@ export default {
     }
     .abouttextbox{
       width: 60%;
-      /* height: 400px; */
-      /* padding: 4rem; */
       padding-top: 6%;
       padding-bottom: 6%;
       position: relative;
@@ -145,7 +133,6 @@ export default {
         font-family: 'Caveat', cursive;
         width: 28%;
         height: 80px;
-        /* background: rgb(255, 255, 255); */
         position: absolute;
         left: -0%;
         top: 0px;
@@ -161,7 +148,6 @@ export default {
         font-family: 'Caveat', cursive;
         width: 28%;
         height: 80px;
-        /* background: rgb(255, 255, 255); */
         position: absolute;
         right: 8%;
         top: 0px;
@@ -174,19 +160,15 @@ export default {
       }
       .container2{
        width: 80%;
-       /* height: 400px; */
-       /* background: aqua; */
        display: flex;
        flex-direction: row;
        justify-content: flex-start;
-       /* background: chocolate; */
        margin-top: 100px;
        margin-bottom: 80px;
      }
       .aboutframe2{
       width: 370px;
       height: 470px;
-      /* background: brown; */
       position: absolute;
       left: 94%;
       top: -10%;
@@ -205,7 +187,6 @@ export default {
       background-image: url(~@/assets/rabbit4.png);
       background-size: contain;
       background-repeat: no-repeat;
-      /* background: rgba(233, 107, 107,0.3); */
     }
      .aboutframe2::before{
       width: 29%;
