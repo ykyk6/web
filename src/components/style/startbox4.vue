@@ -292,7 +292,7 @@ export default {
       .shopbtn{
         width: 80%;
         height: 12%;
-        border: 2px solid black;
+        border: 0.5px solid black;
         border-radius: 5px;
         margin-top: 2%;
         /* margin-bottom: 5px; */
@@ -321,7 +321,7 @@ export default {
       /* color: white; */
       z-index: 1;
       opacity: 0;
-      transition: all 0.6s;
+      /* transition: all 0.6s; */
   }
     .shopbtn:hover::after{
       opacity: 1;
