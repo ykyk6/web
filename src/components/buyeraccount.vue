@@ -22,12 +22,11 @@
     <q-markup-table style="border:1px solid black;padding:2px">
       <thead>
         <tr>
-          <th class="text-center t2 bg-grey-4">顧客ID</th>
-          <th class="text-center t2 bg-grey-4">帳號名</th>
-          <th class="text-center t3 bg-grey-4">詳細資料</th>
-          <th class="text-center t3 bg-grey-4">訂單一覽</th>
-          <th class="text-center t3 bg-grey-4">設為管理員</th>
-          <th class="text-center t3 bg-grey-4">停權</th>
+          <th class="text-center t24 bg-grey-4">顧客ID</th>
+          <th class="text-center t19 bg-grey-4">帳號名</th>
+          <th class="text-center t19 bg-grey-4">詳細資料</th>
+          <th class="text-center t19 bg-grey-4">訂單一覽</th>
+          <th class="text-center t19 bg-grey-4">設為管理員</th>
         </tr>
       </thead>
       <tbody>
@@ -39,7 +38,6 @@
            <td class="text-center"> <q-btn round borderless unelevated icon="description" size="10px" style="background:transparent;color:#00838f" @click="openperorder(useraccount)"/></td>
           <td class="text-center"> <q-btn round unelevated :class="{ 'black': useraccount.manager, 'cyan-8': !useraccount.manager }" icon="assignment_ind" size="10px" @click="managebtn(useraccount)"/>
           </td>
-          <td class="text-center"> <q-btn round color="red" icon="not_interested" size="10px" @click="openorder(orderItem)"/></td>
         </tr>
       </template>
       </tbody>
@@ -563,7 +561,12 @@ export default {
 .t2{
   width: 18%;
 }
-/*  */
+.t19{
+  width: 19%;
+}
+.t24{
+  width: 24%;
+}
 .w-2{
   width: 17%;
 }
