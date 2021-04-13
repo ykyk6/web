@@ -143,8 +143,7 @@
         background: rgba(255, 255, 255, 0.6);
       }
       .say{
-        width: 80%;
-        /* height: 1000px; */
+        width: 100%;
         background: rgba(255, 255, 255, 0.6);
         filter: opacity(0.7);
         border-radius: 7px;
