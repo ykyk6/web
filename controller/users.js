@@ -37,6 +37,7 @@ export const loginUser = async (req, res) => {
       res.status(200).send({ success: true, message: '', result })
     } else {
       res.status(404).send({ success: false, message: 'アカウントが見つかりません' })
+      console.log(result)
     }
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -68,7 +69,7 @@ export const getUser = async (req, res) => {
     const result = await users.find()
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    res.status(500).send({ success: false, message: '發生錯誤' })
+    res.status(500).send({ success: false, message: '500エラー！' })
   }
 }
 
