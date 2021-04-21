@@ -11,7 +11,6 @@ export default {
   components: { Dessertcard },
   data () {
     return {
-      Dessertcard
     }
   }
 }
