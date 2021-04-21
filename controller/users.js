@@ -108,7 +108,7 @@ export const editUser = async (req, res) => {
 // 檢查有沒有登入
 export const heartbeat = async (req, res) => {
   let isLogin = false
-  if (req.session.user) {
+  if (req.session.user !== undefined) {
     isLogin = true
   }
   res.status(200).send(isLogin)
