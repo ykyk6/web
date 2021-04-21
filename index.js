@@ -28,11 +28,8 @@ app.use(cors({
     if (origin === undefined) {
       callback(null, true)
     } else {
-      if (process.env.DEV === 'true') {
+      if (process.env.DEV === 'true' || origin.includes('github')) {
         // 如果是本機開發, 接受所有請求
-        callback(null, true)
-      } else if (origin.includes('github')) {
-        // 如果不是本機開發, 但是是從 github 過來的請求, 允許
         callback(null, true)
       } else {
         // 如果不是本機開發, 也不是從 github 過來, 拒絕
