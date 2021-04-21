@@ -38,8 +38,4 @@ export default {
 .q-tab-sel:active{
   border: 1px solid #6A7735;
 }
-/* .my-card {
-  width: 100%;
-  max-width: 300px;
-} */
 </style>
