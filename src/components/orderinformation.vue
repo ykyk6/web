@@ -475,7 +475,7 @@ export default {
   methods: {
     btnok1 (value) {
       this.pay = value
-      if (this.card_num.length !== 0 && this.card_date.legth !== 0 && this.card_security.length !== 0) {
+      if (this.card_num.length !== 0 && this.card_date.length !== 0 && this.card_security.length !== 0) {
         console.log(value)
         this.expanded = false
         this.choice1 = true
